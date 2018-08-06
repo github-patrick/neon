@@ -1,32 +1,37 @@
 package com.neon.banking.model;
 
+import com.neon.banking.model.types.TransactionType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Data
-@EqualsAndHashCode
-public class Customer {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String firstName;
-    private String lastName;
-    private String username;
-    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionType type;
+    
+    private Double amount;
 
     @ManyToOne
-    private Manager manager;
+    private Account payer;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Set<Account> accounts;
+    @ManyToOne
+    private Account payee;
 
     @Column(name= "createdAt", updatable = false)
     @CreationTimestamp
@@ -35,5 +40,4 @@ public class Customer {
     @Column(name= "updatedAt")
     @UpdateTimestamp
     private LocalDateTime updatedDate;
-
 }
