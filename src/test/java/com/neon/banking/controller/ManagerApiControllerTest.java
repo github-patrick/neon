@@ -49,6 +49,19 @@ public class ManagerApiControllerTest {
     }
 
     @Test
+    public void validationBadRequestCreateManager() throws Exception {
+
+        manager.setPassword(null);
+
+        mockMvc.perform(post(ManagerApiController.RESOURCE_PATH)
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(new ObjectMapper().writeValueAsString(manager)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
     public void getManagers() throws Exception {
         mockMvc.perform(get(ManagerApiController.RESOURCE_PATH)
                 .accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -102,6 +115,17 @@ public class ManagerApiControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .content(new ObjectMapper().writeValueAsString(manager)))
                 .andExpect(status().isNoContent());
+    }
+
+
+    @Test
+    public void updateManagerBadRequest() throws Exception {
+        manager.setFirstName("");
+
+        mockMvc.perform(put(ManagerApiController.RESOURCE_PATH + "/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(new ObjectMapper().writeValueAsString(manager)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

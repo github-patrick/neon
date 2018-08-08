@@ -1,6 +1,5 @@
 package com.neon.banking.controller;
 
-import com.neon.banking.model.Customer;
 import com.neon.banking.model.Manager;
 import com.neon.banking.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.Optional;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(ManagerApiController.RESOURCE_PATH)
@@ -26,7 +24,7 @@ public class ManagerApiController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createManager(@RequestBody Manager manager) {
+    public ResponseEntity createManager(@RequestBody @Valid Manager manager) {
 
         managerService.createManager(manager);
 
@@ -65,7 +63,7 @@ public class ManagerApiController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity updateManager(@RequestBody Manager manager, @PathVariable Long id) {
+    public ResponseEntity updateManager(@RequestBody @Valid Manager manager, @PathVariable Long id) {
 
         if (managerService.getManager(id) == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
