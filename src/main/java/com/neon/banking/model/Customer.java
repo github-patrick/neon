@@ -1,7 +1,9 @@
 package com.neon.banking.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,7 +15,13 @@ import java.util.Set;
 
 @Entity
 @Data
-@EqualsAndHashCode
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode(exclude = {"username", "password", "firstName", "lastName", "manager", "accounts"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
 public class Customer {
 
     @Id
@@ -38,6 +46,7 @@ public class Customer {
     private String password;
 
     @ManyToOne
+    @JsonIgnore
     private Manager manager;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)

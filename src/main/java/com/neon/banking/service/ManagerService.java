@@ -17,8 +17,8 @@ public class ManagerService {
     @Autowired
     private ManagerRepository managerRepository;
 
-    public Manager createManager(Manager manager) {
-        return managerRepository.save(manager);
+    public void createManager(Manager manager) {
+        managerRepository.save(manager);
     }
 
     public List<Manager> getManagers() {

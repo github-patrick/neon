@@ -49,7 +49,7 @@ public class ManagerApiControllerTest {
     }
 
     @Test
-    public void validationBadRequestCreateManager() throws Exception {
+    public void CreateManagerBadRequest() throws Exception {
 
         manager.setPassword(null);
 
@@ -58,7 +58,6 @@ public class ManagerApiControllerTest {
                 .content(new ObjectMapper().writeValueAsString(manager)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
-
     }
 
     @Test
