@@ -1,5 +1,6 @@
 package com.neon.banking.controller;
 
+import com.neon.banking.dto.CustomerDto;
 import com.neon.banking.model.Customer;
 import com.neon.banking.model.Manager;
 import com.neon.banking.service.CustomerService;
@@ -23,43 +24,39 @@ public class CustomerApiController {
         this.customerService = customerService;
     }
 
-    @PostMapping
-    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Customer> createCustomer(@RequestBody @Valid Customer customer) {
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CustomerDto> createCustomer(@RequestBody @Valid Customer customer) {
 
-        customerService.createCustomer(customer);
-
-        return new ResponseEntity<>(customer, HttpStatus.CREATED);
+        return new ResponseEntity(customerService.createCustomer(customer), HttpStatus.CREATED);
     }
 
-    @GetMapping
-    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Customer>> getCustomers() {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CustomerDto>> getCustomers() {
 
-        return new ResponseEntity(customerService.getManagers(),HttpStatus.OK);
+        return new ResponseEntity(customerService.getCustomers(),HttpStatus.OK);
     }
 
     @GetMapping(value= "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Customer> getCustomer(@PathVariable Long id) {
+    public ResponseEntity<CustomerDto> getCustomer(@PathVariable Long id) {
 
-        Customer customer = customerService.getCustomer(id);
+        CustomerDto customerDto = customerService.getCustomer(id);
 
-        if (customer == null) {
+        if (customerDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity(customer, HttpStatus.OK);
+        return new ResponseEntity(customerDto, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteManager(@PathVariable Long id) {
 
-        Customer customer = customerService.getCustomer(id);
+        CustomerDto customerDto = customerService.getCustomer(id);
 
-        if (customer == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        if (customerDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        customerService.deleteManager(customer);
+        customerService.deleteManager(customerDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

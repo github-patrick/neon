@@ -1,5 +1,7 @@
 package com.neon.banking.controller;
 
+import com.neon.banking.dto.ManagerDto;
+import com.neon.banking.mapper.ManagerMapper;
 import com.neon.banking.model.Manager;
 import com.neon.banking.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +26,9 @@ public class ManagerApiController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createManager(@RequestBody @Valid Manager manager) {
+    public ResponseEntity<ManagerDto> createManager(@RequestBody @Valid Manager manager) {
 
-        managerService.createManager(manager);
-
-        return new ResponseEntity(manager, HttpStatus.CREATED);
+        return new ResponseEntity(managerService.createManager(manager), HttpStatus.CREATED);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -38,26 +38,26 @@ public class ManagerApiController {
     }
 
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Manager> getManager(@PathVariable Long id) {
+    public ResponseEntity<ManagerDto> getManager(@PathVariable Long id) {
 
-        Manager manager = managerService.getManager(id);
+        ManagerDto managerDto = managerService.getManager(id);
 
-        if (manager == null) {
+        if (managerDto == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity(manager,HttpStatus.OK);
+        return new ResponseEntity(managerDto,HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteManager(@PathVariable Long id) {
 
-        Manager manager = managerService.getManager(id);
+        ManagerDto managerDto = managerService.getManager(id);
 
-        if (manager == null) {
+        if (managerDto == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        managerService.deleteManager(manager);
+        managerService.deleteManager(managerDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -65,18 +65,16 @@ public class ManagerApiController {
     @PutMapping("{id}")
     public ResponseEntity updateManager(@RequestBody @Valid Manager manager, @PathVariable Long id) {
 
-        if (managerService.getManager(id) == null) {
+        ManagerDto managerDto = managerService.getManager(id);
+
+        if (managerDto == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
-        manager.setId(id);
-        managerService.updateManager(manager);
+        managerDto.setId(id);
+        managerService.updateManager(managerDto);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-
-
-
-
 
 }

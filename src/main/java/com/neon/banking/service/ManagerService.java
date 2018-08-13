@@ -1,5 +1,7 @@
 package com.neon.banking.service;
 
+import com.neon.banking.dto.ManagerDto;
+import com.neon.banking.mapper.ManagerMapper;
 import com.neon.banking.model.Manager;
 import com.neon.banking.repository.ManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,39 +10,58 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ManagerService {
 
-    @Autowired
     private ManagerRepository managerRepository;
 
-    public void createManager(Manager manager) {
-        managerRepository.save(manager);
+    private ManagerMapper managerMapper;
+
+    public ManagerService(ManagerRepository managerRepository, ManagerMapper managerMapper) {
+        this.managerRepository = managerRepository;
+        this.managerMapper = managerMapper;
     }
 
-    public List<Manager> getManagers() {
+    public ManagerDto createManager(Manager manager) {
 
-        List<Manager> managers = new ArrayList<>();
-        managerRepository.findAll().forEach(managers::add);
+        Manager managerSaved = managerRepository.save(manager);
+        ManagerDto managerDtoSaved = managerMapper.map(managerSaved);
+
+        return managerDtoSaved;
+    }
+
+    public List<ManagerDto> getManagers() {
+
+        List<ManagerDto> managers = new ArrayList<>();
+        Iterator<Manager> iterator = managerRepository.findAll().iterator();
+
+        while (iterator.hasNext()) {
+            managers.add(managerMapper.map(iterator.next()));
+        }
         return managers;
     }
 
-    public Manager getManager(Long id) {
+    public ManagerDto getManager(Long id) {
         Optional<Manager> manager = managerRepository.findById(id);
         if (!manager.isPresent()) {
             return null;
         }
-        return manager.get();
+
+        ManagerDto managerDto = managerMapper.map(manager.get());
+        return managerDto;
     }
 
-    public void deleteManager(Manager manager) {
+    public void deleteManager(ManagerDto managerDto) {
+        Manager manager = managerMapper.map(managerDto);
         managerRepository.delete(manager);
     }
 
-    public void updateManager(Manager manager) {
+    public void updateManager(ManagerDto managerDto) {
+        Manager manager = managerMapper.map(managerDto);
         managerRepository.save(manager);
     }
 }

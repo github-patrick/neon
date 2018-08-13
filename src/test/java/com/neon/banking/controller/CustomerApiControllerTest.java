@@ -2,6 +2,8 @@ package com.neon.banking.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.neon.banking.dto.CustomerDto;
+import com.neon.banking.dto.ManagerDto;
 import com.neon.banking.model.Customer;
 import com.neon.banking.model.Manager;
 import com.neon.banking.repository.CustomerRepository;
@@ -34,7 +36,11 @@ public class CustomerApiControllerTest {
 
     private Customer customer;
 
+    private CustomerDto customerDto;
+
     private Manager manager;
+
+    private ManagerDto managerDto;
 
     @Before
     public void setUp() {
@@ -44,8 +50,14 @@ public class CustomerApiControllerTest {
         manager = Manager.builder().id(1L).firstName("Mark").lastName("Matthew").username("markup")
                 .password("password").customers(null).build();
 
+        managerDto = ManagerDto.builder().id(1L).firstName("Mark").lastName("Matthew").username("markup")
+                .password("password").customers(null).build();
+
         customer = Customer.builder().id(1L).username("Toby").password("password").firstName("Thomas").lastName("Hardy")
                 .manager(manager).accounts(null).build();
+
+        customerDto = CustomerDto.builder().id(1L).username("Toby").password("password").firstName("Thomas").lastName("Hardy")
+                .accounts(null).build();
     }
 
 
@@ -79,7 +91,7 @@ public class CustomerApiControllerTest {
 
     @Test
     public void getCustomer() throws Exception {
-        when(customerService.getCustomer(customer.getId())).thenReturn(customer);
+        when(customerService.getCustomer(customer.getId())).thenReturn(customerDto);
 
         mockMvc.perform(get(CustomerApiController.RESOURCE_PATH + "/1")
                 .accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -101,7 +113,7 @@ public class CustomerApiControllerTest {
     @Test
     public void deleteCustomer() throws Exception {
 
-        when(customerService.getCustomer(manager.getId())).thenReturn(customer);
+        when(customerService.getCustomer(manager.getId())).thenReturn(customerDto);
 
         mockMvc.perform((delete(CustomerApiController.RESOURCE_PATH + "/1")))
                 .andExpect(status().isOk());
@@ -119,7 +131,7 @@ public class CustomerApiControllerTest {
     @Test
     public void updateCustomer() throws Exception {
 
-        when(customerService.getCustomer(customer.getId())).thenReturn(customer);
+        when(customerService.getCustomer(customer.getId())).thenReturn(customerDto);
 
         customer.setFirstName("Jacob");
 
