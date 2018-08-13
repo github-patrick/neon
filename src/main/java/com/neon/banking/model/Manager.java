@@ -1,7 +1,5 @@
 package com.neon.banking.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -18,19 +16,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-//@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Manager {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "Username cannot be null")
     @Size(min = 4, message = "Username should have at least 4 characters")
     @Column(unique = true)
     private String username;
 
-    @NotNull
+    @NotNull(message = "Password cannot be null")
     @Size(min = 5, message = "Password should have at least 5 characters")
     private String password;
 

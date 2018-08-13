@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -57,9 +58,23 @@ public class ManagerRepositoryTest {
         assertThat(retrievedManager.getLastName(), is(equalTo("Matthew")));
     }
 
+    @Test
+    @DirtiesContext
+    public void shouldFindByUsernameIgnoringCaseSensitivity() {
+
+        managerRepository.save(manager);
+
+        Manager retrievedManager = managerRepository.findByUsernameIgnoreCase("Username");
+
+        assertThat(retrievedManager.getId(), is(equalTo(1L)));
+        assertThat(retrievedManager.getFirstName(), is(equalTo("Mark")));
+        assertThat(retrievedManager.getLastName(), is(equalTo("Matthew")));
+    }
+
     // Constraints
 
     @Test
+    @DirtiesContext
     public void shouldHaveAValidPassword() {
         manager.setPassword("pass");
         Set<ConstraintViolation<Manager>> violations = validator.validate(manager);
@@ -69,6 +84,7 @@ public class ManagerRepositoryTest {
     }
 
     @Test
+    @DirtiesContext
     public void shouldHaveAValidUsername() {
         manager.setUsername("jun");
         Set<ConstraintViolation<Manager>> violations = validator.validate(manager);
@@ -78,6 +94,7 @@ public class ManagerRepositoryTest {
     }
 
     @Test
+    @DirtiesContext
     public void shouldHaveAFirstName() {
         manager.setFirstName(null);
         Set<ConstraintViolation<Manager>> violations = validator.validate(manager);
@@ -93,6 +110,7 @@ public class ManagerRepositoryTest {
     }
 
     @Test
+    @DirtiesContext
     public void shouldHaveALastName() {
         manager.setLastName(null);
         Set<ConstraintViolation<Manager>> violations = validator.validate(manager);

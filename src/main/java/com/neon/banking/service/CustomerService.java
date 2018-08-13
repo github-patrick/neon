@@ -1,12 +1,16 @@
 package com.neon.banking.service;
 
 import com.neon.banking.dto.CustomerDto;
+import com.neon.banking.exceptions.UsernameExistsException;
 import com.neon.banking.mapper.CustomerMapper;
 import com.neon.banking.model.Customer;
 import com.neon.banking.model.Manager;
 import com.neon.banking.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -61,5 +65,11 @@ public class CustomerService {
 
     public void updateCustomer(Customer customer) {
         customerRepository.save(customer);
+    }
+
+    public void checkIfUsernameIsUnique(String username) {
+        if (customerRepository.findByUsernameIgnoreCase(username) != null) {
+            throw new UsernameExistsException("Username exists");
+        }
     }
 }

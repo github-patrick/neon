@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ManagerRepository extends CrudRepository<Manager, Long> {
 
+    Manager findByUsernameIgnoreCase(String username);
+
 }

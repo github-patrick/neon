@@ -1,13 +1,15 @@
 package com.neon.banking.service;
 
 import com.neon.banking.dto.ManagerDto;
+import com.neon.banking.exceptions.ModelConstraintErrorException;
+import com.neon.banking.exceptions.UsernameExistsException;
 import com.neon.banking.mapper.ManagerMapper;
 import com.neon.banking.model.Manager;
 import com.neon.banking.repository.ManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Validator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,6 +22,7 @@ public class ManagerService {
     private ManagerRepository managerRepository;
 
     private ManagerMapper managerMapper;
+
 
     public ManagerService(ManagerRepository managerRepository, ManagerMapper managerMapper) {
         this.managerRepository = managerRepository;
@@ -60,8 +63,18 @@ public class ManagerService {
         managerRepository.delete(manager);
     }
 
-    public void updateManager(ManagerDto managerDto) {
-        Manager manager = managerMapper.map(managerDto);
+    public void updateManager(Manager manager) {
         managerRepository.save(manager);
+    }
+
+    public void checkIfUsernameIsUnique(String username) {
+
+        if (managerRepository.findByUsernameIgnoreCase(username) != null) {
+            throw new UsernameExistsException("Username exists");
+        }
+    }
+
+    public void handleModelConstraints(String errorMessage) {
+        throw new ModelConstraintErrorException(errorMessage);
     }
 }

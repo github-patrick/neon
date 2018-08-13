@@ -27,6 +27,9 @@ public class CustomerApiController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomerDto> createCustomer(@RequestBody @Valid Customer customer) {
 
+        customerService.checkIfUsernameIsUnique(customer.getUsername());
+
+
         return new ResponseEntity(customerService.createCustomer(customer), HttpStatus.CREATED);
     }
 
