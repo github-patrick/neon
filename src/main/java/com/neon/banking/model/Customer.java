@@ -1,7 +1,8 @@
 package com.neon.banking.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -9,15 +10,19 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Data
-@EqualsAndHashCode
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Customer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 
@@ -40,8 +45,8 @@ public class Customer {
     @ManyToOne
     private Manager manager;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Set<Account> accounts;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Account> accounts;
 
     @Column(name= "createdAt", updatable = false)
     @CreationTimestamp

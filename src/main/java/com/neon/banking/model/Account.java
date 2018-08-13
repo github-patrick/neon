@@ -7,7 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,7 +24,7 @@ public class Account {
     private Customer customer;
 
     @OneToMany(mappedBy = "payer", cascade = CascadeType.PERSIST)
-    private Set<Transaction> transactions;
+    private List<Transaction> transactions;
 
     @Column(name= "createdAt", updatable = false)
     @CreationTimestamp
