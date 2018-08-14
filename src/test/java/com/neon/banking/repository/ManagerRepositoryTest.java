@@ -1,5 +1,7 @@
 package com.neon.banking.repository;
 
+import com.neon.banking.dto.ManagerDto;
+import com.neon.banking.mapper.ManagerMapper;
 import com.neon.banking.model.Manager;
 
 import org.junit.Before;
@@ -32,14 +34,23 @@ public class ManagerRepositoryTest {
     @Autowired
     private ManagerRepository managerRepository;
 
+    private ManagerMapper managerMapper = ManagerMapper.INSTANCE;
+
     private static Validator validator;
 
     private Manager manager;
 
+    private ManagerDto managerDto;
+
+
+
     @Before
     public void setUp() {
-        manager = Manager.builder().firstName("Mark").lastName("Matthew").username("username")
+
+        managerDto = ManagerDto.builder().firstName("Mark").lastName("Matthew").username("username")
                 .password("password").customers(null).build();
+
+        manager = managerMapper.map(managerDto);
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
@@ -48,6 +59,7 @@ public class ManagerRepositoryTest {
 
     @Test
     public void shouldPersistDataToDb() {
+
 
         managerRepository.save(manager);
 

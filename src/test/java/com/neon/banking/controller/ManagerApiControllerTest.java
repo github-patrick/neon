@@ -35,20 +35,15 @@ public class ManagerApiControllerTest {
     private MockMvc mockMvc;
     private ManagerApiController managerApiController;
     private ManagerDto managerDto;
-    private Manager manager;
 
     @Before
     public void setUp() {
-
-//        when(managerMapper.map(new ManagerDto())).thenReturn(manager);
 
         managerApiController = new ManagerApiController(managerService);
         mockMvc = MockMvcBuilders.standaloneSetup(managerApiController).build();
         managerDto = ManagerDto.builder().id(new Long(1)).firstName("Mark").lastName("Matthew").username("markup")
                 .password("password").customers(null).build();
 
-        manager = Manager.builder().id(new Long(1)).firstName("Mark").lastName("Matthew").username("markup")
-                .password("password").customers(null).build();
     }
 
     @Test
@@ -65,11 +60,11 @@ public class ManagerApiControllerTest {
     @Ignore("stubbed out until a reasonable way to mock out collaborators can be thought of")
     public void CreateManagerBadRequest() throws Exception {
 
-        manager.setPassword("he");
+        managerDto.setPassword("he");
 
         mockMvc.perform(post(ManagerApiController.RESOURCE_PATH)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(new ObjectMapper().writeValueAsString(manager)))
+                .content(new ObjectMapper().writeValueAsString(managerDto)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -83,7 +78,7 @@ public class ManagerApiControllerTest {
 
     @Test
     public void getManager() throws Exception {
-        when(managerService.getManager(manager.getId())).thenReturn(managerDto);
+        when(managerService.getManager(managerDto.getId())).thenReturn(managerDto);
 
         mockMvc.perform(get(ManagerApiController.RESOURCE_PATH + "/1")
                 .accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -102,7 +97,7 @@ public class ManagerApiControllerTest {
     @Test
     public void deleteManager() throws Exception {
 
-        when(managerService.getManager(manager.getId())).thenReturn(managerDto);
+        when(managerService.getManager(managerDto.getId())).thenReturn(managerDto);
 
         mockMvc.perform((delete(ManagerApiController.RESOURCE_PATH + "/1")))
                 .andExpect(status().isOk());
@@ -122,21 +117,21 @@ public class ManagerApiControllerTest {
 
         when(managerService.getManager(managerDto.getId())).thenReturn(managerDto);
 
-        manager.setFirstName("Jacob");
+        managerDto.setFirstName("Jacob");
 
         mockMvc.perform(put(ManagerApiController.RESOURCE_PATH + "/1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(new ObjectMapper().writeValueAsString(manager)))
+                .content(new ObjectMapper().writeValueAsString(managerDto)))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     public void updateManagerBadRequest() throws Exception {
-        manager.setFirstName("");
+        managerDto.setFirstName("");
 
         mockMvc.perform(put(ManagerApiController.RESOURCE_PATH + "/1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(new ObjectMapper().writeValueAsString(manager)))
+                .content(new ObjectMapper().writeValueAsString(managerDto)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -146,7 +141,7 @@ public class ManagerApiControllerTest {
 
         mockMvc.perform(put(ManagerApiController.RESOURCE_PATH + "/2")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(new ObjectMapper().writeValueAsString(manager)))
+                .content(new ObjectMapper().writeValueAsString(managerDto)))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }

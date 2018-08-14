@@ -36,11 +36,7 @@ public class CustomerApiControllerTest {
 
     private MockMvc mockMvc;
 
-    private Customer customer;
-
     private CustomerDto customerDto;
-
-    private Manager manager;
 
     private ManagerDto managerDto;
 
@@ -50,14 +46,9 @@ public class CustomerApiControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(customerApiController)
                 .setControllerAdvice(new CustomizedResponseEntityExceptionHandler()).build();
 
-        manager = Manager.builder().id(1L).firstName("Mark").lastName("Matthew").username("markup")
-                .password("password").customers(null).build();
-
         managerDto = ManagerDto.builder().id(1L).firstName("Mark").lastName("Matthew").username("markup")
                 .password("password").customers(null).build();
 
-        customer = Customer.builder().id(1L).username("Toby").password("password").firstName("Thomas").lastName("Hardy")
-                .manager(manager).accounts(null).build();
 
         customerDto = CustomerDto.builder().id(1L).username("Toby").password("password").firstName("Thomas").lastName("Hardy")
                 .accounts(null).build();
@@ -68,7 +59,7 @@ public class CustomerApiControllerTest {
     public void createCustomer() throws Exception {
         mockMvc.perform(post(CustomerApiController.RESOURCE_PATH)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(new ObjectMapper().writeValueAsString(customer)))
+                .content(new ObjectMapper().writeValueAsString(customerDto)))
                 .andDo(print())
                 .andExpect(status().isCreated());
     }
@@ -77,11 +68,11 @@ public class CustomerApiControllerTest {
     @Ignore
     public void CreateCustomerBadRequest() throws Exception {
 
-        customer.setPassword("d");
+        customerDto.setPassword("d");
 
         mockMvc.perform(post(CustomerApiController.RESOURCE_PATH)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(new ObjectMapper().writeValueAsString(customer)))
+                .content(new ObjectMapper().writeValueAsString(customerDto)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -95,7 +86,7 @@ public class CustomerApiControllerTest {
 
     @Test
     public void getCustomer() throws Exception {
-        when(customerService.getCustomer(customer.getId())).thenReturn(customerDto);
+        when(customerService.getCustomer(customerDto.getId())).thenReturn(customerDto);
 
         mockMvc.perform(get(CustomerApiController.RESOURCE_PATH + "/1")
                 .accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -117,7 +108,7 @@ public class CustomerApiControllerTest {
     @Test
     public void deleteCustomer() throws Exception {
 
-        when(customerService.getCustomer(manager.getId())).thenReturn(customerDto);
+        when(customerService.getCustomer(managerDto.getId())).thenReturn(customerDto);
 
         mockMvc.perform((delete(CustomerApiController.RESOURCE_PATH + "/1")))
                 .andExpect(status().isOk());
@@ -135,24 +126,24 @@ public class CustomerApiControllerTest {
     @Test
     public void updateCustomer() throws Exception {
 
-        when(customerService.getCustomer(customer.getId())).thenReturn(customerDto);
+        when(customerService.getCustomer(customerDto.getId())).thenReturn(customerDto);
 
-        customer.setFirstName("Jacob");
+        customerDto.setFirstName("Jacob");
 
         mockMvc.perform(put(CustomerApiController.RESOURCE_PATH + "/1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(new ObjectMapper().writeValueAsString(customer)))
+                .content(new ObjectMapper().writeValueAsString(customerDto)))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     @Ignore
     public void updateCustomerBadRequest() throws Exception {
-        customer.setFirstName("");
+        customerDto.setFirstName("");
 
         mockMvc.perform(put(CustomerApiController.RESOURCE_PATH + "/1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(new ObjectMapper().writeValueAsString(customer)))
+                .content(new ObjectMapper().writeValueAsString(customerDto)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -163,7 +154,7 @@ public class CustomerApiControllerTest {
 
         mockMvc.perform(put(CustomerApiController.RESOURCE_PATH + "/2")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(new ObjectMapper().writeValueAsString(customer)))
+                .content(new ObjectMapper().writeValueAsString(customerDto)))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }

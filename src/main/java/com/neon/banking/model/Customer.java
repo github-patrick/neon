@@ -13,33 +13,10 @@ import java.util.List;
 
 @Entity
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Customer {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-
-    @NotNull(message = "Username cannot be null")
-    @Size(min = 4, message = "Username should have at least 4 characters")
-    @Column(unique = true)
-    private String username;
-
-    @NotNull(message = "Password cannot be null")
-    @Size(min = 5, message = "Password should have at least 5 characters")
-    private String password;
-
-    @NotNull(message = "First name cannot be null")
-    @Size(min = 1, message = "First name should have at least 1 character")
-    private String firstName;
-
-    @NotNull(message = "Last name cannot be null")
-    @Size(min = 1, message = "Last name should have at least 1 character")
-    private String lastName;
+public class Customer extends User {
 
     @ManyToOne
     private Manager manager;
@@ -47,12 +24,6 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Account> accounts;
 
-    @Column(name= "createdAt", updatable = false)
-    @CreationTimestamp
-    private LocalDateTime createdDate;
 
-    @Column(name= "updatedAt")
-    @UpdateTimestamp
-    private LocalDateTime updatedDate;
 
 }
