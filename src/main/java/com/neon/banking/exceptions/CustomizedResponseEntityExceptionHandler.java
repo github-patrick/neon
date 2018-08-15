@@ -28,16 +28,36 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     @ExceptionHandler(value = UsernameExistsException.class)
     public ResponseEntity handleUsernameExists(UsernameExistsException ex, WebRequest webRequest) {
-        ErrorDetail errorDetail = new ErrorDetail(new Date(), 400, ex.getMessage(), ex.getMessage());
+        ErrorDetail errorDetail = new ErrorDetail(new Date(), HttpStatus.BAD_REQUEST.value(), ex.getMessage(), ex.getMessage());
 
         return new ResponseEntity(errorDetail, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = ModelConstraintErrorException.class)
     public ResponseEntity handleModelConstraints(ModelConstraintErrorException ex, WebRequest webRequest) {
-        ErrorDetail errorDetail = new ErrorDetail(new Date(), 400, ex.getMessage(), ex.getMessage());
+        ErrorDetail errorDetail = new ErrorDetail(new Date(), HttpStatus.BAD_REQUEST.value(), ex.getMessage(), ex.getMessage());
 
         return new ResponseEntity(errorDetail, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = ManagerNotFoundException.class)
+    public ResponseEntity handleManagerNotFound(ManagerNotFoundException ex, WebRequest request) {
+        ErrorDetail errorDetail = new ErrorDetail(new Date(), HttpStatus.NOT_FOUND.value(), ex.getMessage(), ex.getMessage());
+        return new ResponseEntity(errorDetail, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = CustomerNotFoundException.class)
+    public ResponseEntity handleCustomerNotFound(CustomerNotFoundException ex, WebRequest request) {
+        ErrorDetail errorDetail = new ErrorDetail(new Date(), HttpStatus.NOT_FOUND.value(), ex.getMessage(), ex.getMessage());
+        return new ResponseEntity(errorDetail, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = AccountNotFoundException.class)
+    public ResponseEntity handleAccountNotFound(AccountNotFoundException ex, WebRequest request) {
+        ErrorDetail errorDetail = new ErrorDetail(new Date(), HttpStatus.NOT_FOUND.value(), ex.getMessage(), ex.getMessage());
+        return new ResponseEntity(errorDetail, HttpStatus.NOT_FOUND);
+    }
+
+
 
 }

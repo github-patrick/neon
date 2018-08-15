@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(ManagerApiController.RESOURCE_PATH)
@@ -37,7 +38,7 @@ public class ManagerApiController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getManagers() {
+    public ResponseEntity<List<ManagerDto>> getManagers() {
 
         return new ResponseEntity(managerService.getManagers(), HttpStatus.OK);
     }

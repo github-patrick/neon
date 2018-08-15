@@ -1,6 +1,7 @@
 package com.neon.banking.service;
 
 import com.neon.banking.dto.CustomerDto;
+import com.neon.banking.exceptions.CustomerNotFoundException;
 import com.neon.banking.exceptions.ModelConstraintErrorException;
 import com.neon.banking.exceptions.UsernameExistsException;
 import com.neon.banking.mapper.CustomerMapper;
@@ -83,5 +84,11 @@ public class CustomerService {
 
     public void handleModelConstraints(String errorMessage) {
         throw new ModelConstraintErrorException(errorMessage);
+    }
+
+    public void checkCustomerExists(Long id) {
+        if (!customerRepository.findById(id).isPresent()) {
+            throw new CustomerNotFoundException("customer of id " + id + " does not exist");
+        }
     }
 }

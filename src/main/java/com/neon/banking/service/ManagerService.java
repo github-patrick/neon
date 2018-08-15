@@ -1,15 +1,13 @@
 package com.neon.banking.service;
 
 import com.neon.banking.dto.ManagerDto;
+import com.neon.banking.exceptions.ManagerNotFoundException;
 import com.neon.banking.exceptions.ModelConstraintErrorException;
 import com.neon.banking.exceptions.UsernameExistsException;
 import com.neon.banking.mapper.ManagerMapper;
 import com.neon.banking.model.Manager;
 import com.neon.banking.repository.ManagerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.Validator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -76,5 +74,11 @@ public class ManagerService {
 
     public void handleModelConstraints(String errorMessage) {
         throw new ModelConstraintErrorException(errorMessage);
+    }
+
+    public void checkIfManagerExists(Long id) {
+        if (!managerRepository.findById(id).isPresent()) {
+            throw new ManagerNotFoundException("manager of id " +id+ "does not exist");
+        }
     }
 }

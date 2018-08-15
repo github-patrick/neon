@@ -9,6 +9,7 @@ import com.neon.banking.model.Customer;
 import com.neon.banking.model.Manager;
 import com.neon.banking.repository.CustomerRepository;
 import com.neon.banking.service.CustomerService;
+import com.neon.banking.service.ManagerService;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -31,6 +32,9 @@ public class CustomerApiControllerTest {
 
     @Mock
     private CustomerService customerService;
+
+    @Mock
+    private ManagerService managerService;
 
     private CustomerApiController customerApiController;
 

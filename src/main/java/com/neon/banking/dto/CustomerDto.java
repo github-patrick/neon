@@ -30,7 +30,7 @@ public class CustomerDto {
 //    @JsonIgnore
 //    private ManagerDto managerDto;
 
-    private List<Account> accounts;
+    private List<AccountDto> accounts;
 
     private LocalDateTime createdDate;
 
